@@ -1,0 +1,8 @@
+{
+  "name": "sereno-dashboard",
+  "version": "1.0.0",
+  "description": "Sereno Content Studio - TikTok Dashboard",
+  "engines": {
+    "node": "18.x"
+  }
+}
