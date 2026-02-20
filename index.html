@@ -57,6 +57,8 @@
       gap: 15px;
       border: 1px solid #333;
       transition: all 0.2s;
+      text-decoration: none;
+      color: inherit;
     }
     .account-card:active { transform: scale(0.98); }
     .account-card.has-drafts { border-color: #22c55e; }
@@ -78,9 +80,6 @@
     .account-niche { 
       font-size: 0.8rem; 
       color: #888;
-      display: flex;
-      align-items: center;
-      gap: 6px;
       margin-top: 3px;
     }
     .account-status {
@@ -112,17 +111,6 @@
       font-weight: 600;
     }
     
-    .action-btn {
-      background: #667eea;
-      color: white;
-      border: none;
-      padding: 10px 16px;
-      border-radius: 20px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      cursor: pointer;
-    }
-    
     .quick-actions {
       display: flex;
       gap: 10px;
@@ -141,10 +129,26 @@
       display: flex;
       align-items: center;
       gap: 8px;
+      text-decoration: none;
     }
     .quick-action.primary {
       background: linear-gradient(135deg, #667eea, #764ba2);
       border: none;
+    }
+    
+    .empty-state {
+      padding: 60px 20px;
+      text-align: center;
+      color: #888;
+    }
+    .empty-state-icon {
+      font-size: 3rem;
+      margin-bottom: 15px;
+    }
+    .empty-state h3 {
+      font-size: 1.1rem;
+      color: #fff;
+      margin-bottom: 8px;
     }
     
     .bottom-nav {
@@ -171,47 +175,6 @@
     }
     .nav-item.active { color: #667eea; }
     .nav-icon { font-size: 1.3rem; }
-    
-    /* Loading overlay */
-    .loading {
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.9);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-    }
-    .spinner {
-      width: 40px;
-      height: 40px;
-      border: 3px solid #333;
-      border-top-color: #667eea;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    
-    /* Toast notification */
-    .toast {
-      position: fixed;
-      bottom: 80px;
-      left: 50%;
-      transform: translateX(-50%) translateY(100px);
-      background: #22c55e;
-      color: white;
-      padding: 12px 24px;
-      border-radius: 25px;
-      font-size: 0.9rem;
-      opacity: 0;
-      transition: all 0.3s;
-      z-index: 500;
-    }
-    .toast.show {
-      transform: translateX(-50%) translateY(0);
-      opacity: 1;
-    }
   </style>
 </head>
 <body>
@@ -222,7 +185,7 @@
   
   <div class="stats-bar">
     <div class="stat">
-      <div class="stat-number" id="total-accounts">20</div>
+      <div class="stat-number" id="total-accounts">2</div>
       <div class="stat-label">ACCOUNTS</div>
     </div>
     <div class="stat">
@@ -236,35 +199,48 @@
   </div>
   
   <div class="quick-actions">
-    <button class="quick-action primary" onclick="generateAll()">
-      ⚡ Generate All Drafts
-    </button>
-    <button class="quick-action" onclick="viewTrends()">
+    <a href="drafts.html" class="quick-action primary">
+      ⚡ View Drafts
+    </a>
+    <a href="trends.html" class="quick-action">
       📈 View Trends
-    </button>
-    <button class="quick-action" onclick="bulkPost()">
-      🚀 Bulk Post
-    </button>
+    </a>
   </div>
   
-  <div class="section-title">
-    Accounts Needing Content
-  </div>
+  <div class="section-title">Connected Accounts</div>
   
   <div class="accounts-grid" id="accounts-list">
-    <!-- Accounts loaded dynamically -->
-    <div class="loading" id="loading">
-      <div class="spinner"></div>
-      <p style="margin-top: 15px; color: #888;">Loading accounts...</p>
-    </div>
+    <a href="drafts.html?account=sarahsabelli" class="account-card">
+      <div class="account-avatar">📱</div>
+      <div class="account-info">
+        <div class="account-name">@sarahsabelli</div>
+        <div class="account-niche">TikTok Account</div>
+        <div class="account-status">
+          <span class="status-dot empty"></span>
+          <span>No drafts yet</span>
+        </div>
+      </div>
+    </a>
+    
+    <a href="drafts.html?account=madeline_malone" class="account-card">
+      <div class="account-avatar">📱</div>
+      <div class="account-info">
+        <div class="account-name">@madeline_malone</div>
+        <div class="account-niche">TikTok Account</div>
+        <div class="account-status">
+          <span class="status-dot empty"></span>
+          <span>No drafts yet</span>
+        </div>
+      </div>
+    </a>
   </div>
   
-  <div class="section-title">
-    All Accounts
-  </div>
+  <div class="section-title">Quick Actions</div>
   
-  <div class="accounts-grid" id="all-accounts">
-    <!-- All accounts loaded dynamically -->
+  <div class="empty-state">
+    <div class="empty-state-icon">🚀</div>
+    <h3>Ready to Create Content</h3>
+    <p>Your accounts are connected to GenViral.<br>Visit the Drafts or Trends tabs to start.</p>
   </div>
   
   <div class="bottom-nav">
@@ -280,157 +256,6 @@
       <span class="nav-icon">📊</span>
       <span>Trends</span>
     </a>
-    <a href="settings.html" class="nav-item">
-      <span class="nav-icon">⚙️</span>
-      <span>Settings</span>
-    </a>
   </div>
-  
-  <div class="toast" id="toast"></div>
-  
-  <script>
-    // Account data - will be loaded from GenViral API
-    let accounts = [];
-    
-    // Fetch real connected accounts from GenViral via proxy
-    async function loadAccounts() {
-      try {
-        const response = await fetch('/api/accounts');
-        
-        if (!response.ok) throw new Error('Failed to fetch accounts');
-        
-        const data = await response.json();
-        
-        if (data.ok && data.data && data.data.accounts) {
-          // Map GenViral accounts to dashboard format
-          accounts = data.data.accounts
-            .filter(acc => acc.platform === 'tiktok')
-            .map(acc => ({
-              handle: `@${acc.username}`,
-              niche: acc.type === 'byo' ? 'BYO Account' : 'Partner Account',
-              emoji: '📱',
-              draftCount: 0, // Will be populated from API later
-              lastPosted: 'Not yet',
-              status: acc.status === 'active' ? 'empty' : 'pending',
-              accountId: acc.id
-            }));
-        }
-      } catch (err) {
-        console.error('Error loading accounts:', err);
-        // Fallback to demo if API fails
-        accounts = [];
-      }
-      
-      // Always render accounts, even if empty
-      renderAccounts();
-      updateStats();
-    }
-    
-    // Fallback: load accounts inline if API is slow
-    function loadAccountsInline() {
-      // Hardcoded fallback with real accounts from GenViral
-      accounts = [
-        { handle: '@sarahsabelli', niche: 'Connected TikTok Account', emoji: '📱', draftCount: 0, lastPosted: 'Not yet', status: 'empty', accountId: '458a6a73-99e1-4e12-b910-36369bdcd377' },
-        { handle: '@madeline_malone', niche: 'Connected TikTok Account', emoji: '📱', draftCount: 0, lastPosted: 'Not yet', status: 'empty', accountId: 'beadcb53-85f3-448c-b01c-dc209cb1a896' }
-      ];
-      renderAccounts();
-      updateStats();
-    }
-    }
-    
-    // Function to render account cards
-    function renderAccounts() {
-      const container = document.getElementById('accounts-list');
-      const allContainer = document.getElementById('all-accounts');
-      const loading = document.getElementById('loading');
-      
-      loading.style.display = 'none';
-      
-      let needsContentHTML = '';
-      let allAccountsHTML = '';
-      let totalDrafts = 0;
-      
-      accounts.forEach(account => {
-        totalDrafts += account.draftCount;
-        
-        const statusClass = account.status === 'ready' ? 'ready' : 
-                           account.status === 'pending' ? 'pending' : 'empty';
-        const statusText = account.status === 'ready' ? 'Ready to post' : 
-                          account.status === 'pending' ? 'Needs attention' : 'No drafts';
-        const cardClass = account.draftCount > 0 ? 'has-drafts' : 
-                         account.status === 'pending' ? 'needs-attention' : '';
-        
-        const cardHTML = `
-          <div class="account-card ${cardClass}" onclick="viewAccount('${account.handle}')">
-            <div class="account-avatar">${account.emoji}</div>
-            <div class="account-info">
-              <div class="account-name">${account.handle}</div>
-              <div class="account-niche">${account.niche}</div>
-              <div class="account-status">
-                <span class="status-dot ${statusClass}"></span>
-                <span>${statusText} • ${account.lastPosted}</span>
-              </div>
-            </div>
-            ${account.draftCount > 0 ? `<div class="draft-count">${account.draftCount}</div>` : ''}
-          </div>
-        `;
-        
-        allAccountsHTML += cardHTML;
-        if (account.draftCount > 0 || account.status === 'pending') {
-          needsContentHTML += cardHTML;
-        }
-      });
-      
-      container.innerHTML = needsContentHTML || '<div style="padding: 20px; text-align: center; color: #888;">All caught up! 🎉</div>';
-      allContainer.innerHTML = allAccountsHTML;
-      
-      // Update stats
-      // Update stats with real data
-      document.getElementById('total-accounts').textContent = accounts.length;
-      
-      const totalDrafts = accounts.reduce((sum, acc) => sum + acc.draftCount, 0);
-      document.getElementById('drafts-ready').textContent = totalDrafts;
-    }
-    
-    function viewAccount(handle) {
-      window.location.href = `account.html?handle=${encodeURIComponent(handle)}`;
-    }
-    
-    function generateAll() {
-      showToast('🚀 Generating drafts for all accounts...');
-      // This will call the API to generate drafts
-      setTimeout(() => {
-        showToast('✅ Drafts generated! Refresh to see updates.');
-      }, 2000);
-    }
-    
-    function viewTrends() {
-      window.location.href = 'trends.html';
-    }
-    
-    function bulkPost() {
-      showToast('📋 Opening bulk post interface...');
-      window.location.href = 'drafts.html';
-    }
-    
-    function showToast(message) {
-      const toast = document.getElementById('toast');
-      toast.textContent = message;
-      toast.classList.add('show');
-      setTimeout(() => toast.classList.remove('show'), 3000);
-    }
-    
-    // Initialize
-    document.addEventListener('DOMContentLoaded', () => {
-      // Try API first, but fallback to inline data after 3 seconds
-      loadAccounts();
-      setTimeout(() => {
-        if (accounts.length === 0) {
-          console.log('API slow, using inline data');
-          loadAccountsInline();
-        }
-      }, 3000);
-    });
-  </script>
 </body>
 </html>
