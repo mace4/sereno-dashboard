@@ -1,11 +1,15 @@
 {
   "version": 2,
-  "name": "sereno-content-studio",
   "buildCommand": null,
   "outputDirectory": ".",
   "framework": null,
+  "cleanUrls": true,
+  "trailingSlash": false,
   "rewrites": [
-    { "source": "/(.*)", "destination": "/$1" }
+    { "source": "/", "destination": "/index.html" },
+    { "source": "/drafts", "destination": "/drafts.html" },
+    { "source": "/trends", "destination": "/trends.html" },
+    { "source": "/account", "destination": "/account.html" }
   ],
   "headers": [
     {
