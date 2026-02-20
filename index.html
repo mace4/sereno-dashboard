@@ -292,14 +292,10 @@
     // Account data - will be loaded from GenViral API
     let accounts = [];
     
-    // Fetch real connected accounts from GenViral
+    // Fetch real connected accounts from GenViral via proxy
     async function loadAccounts() {
-      const GENVIRAL_TOKEN = 'gva_live_c780bea0a6.e4b3f4320c725b6f1222ffe38b1ec4cbcebda9968c0e9404';
-      
       try {
-        const response = await fetch('https://www.genviral.io/api/partner/v1/accounts', {
-          headers: { 'Authorization': `Bearer ${GENVIRAL_TOKEN}` }
-        });
+        const response = await fetch('/api/accounts');
         
         if (!response.ok) throw new Error('Failed to fetch accounts');
         
