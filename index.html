@@ -289,17 +289,55 @@
   <div class="toast" id="toast"></div>
   
   <script>
-    // Account data structure
-    const accounts = [
-      { handle: '@fitgirltips', niche: 'Female Fitness - Glutes', emoji: '🍑', draftCount: 3, lastPosted: '2h ago', status: 'ready' },
-      { handle: '@gymmotivationxx', niche: 'Female Fitness - General', emoji: '💪', draftCount: 2, lastPosted: '5h ago', status: 'ready' },
-      { handle: '@weightlossqueen', niche: 'Weight Loss - Female', emoji: '⚖️', draftCount: 1, lastPosted: '1d ago', status: 'pending' },
-      { handle: '@gymbrotips', niche: 'Male Fitness', emoji: '🏋️', draftCount: 4, lastPosted: '3h ago', status: 'ready' },
-      { handle: '@strengthgains', niche: 'Male Fitness - Strength', emoji: '💪', draftCount: 0, lastPosted: '2d ago', status: 'empty' },
-      { handle: '@calmminddaily', niche: 'Mental Health', emoji: '🧠', draftCount: 2, lastPosted: '8h ago', status: 'ready' },
-      { handle: '@anxietyhelper', niche: 'Mental Health - Anxiety', emoji: '💆', draftCount: 1, lastPosted: '1d ago', status: 'pending' },
-      { handle: '@mindfulmoment', niche: 'Mental Health - Mindfulness', emoji: '🧘', draftCount: 0, lastPosted: '3d ago', status: 'empty' }
-    ];
+    // Account data - will be loaded from GenViral API
+    let accounts = [];
+    
+    // Fetch real connected accounts from GenViral
+    async function loadAccounts() {
+      const GENVIRAL_TOKEN = 'gva_live_c780bea0a6.e4b3f4320c725b6f1222ffe38b1ec4cbcebda9968c0e9404';
+      
+      try {
+        const response = await fetch('https://www.genviral.io/api/partner/v1/accounts', {
+          headers: { 'Authorization': `Bearer ${GENVIRAL_TOKEN}` }
+        });
+        
+        if (!response.ok) throw new Error('Failed to fetch accounts');
+        
+        const data = await response.json();
+        
+        if (data.ok && data.data && data.data.accounts) {
+          // Map GenViral accounts to dashboard format
+          accounts = data.data.accounts
+            .filter(acc => acc.platform === 'tiktok')
+            .map(acc => ({
+              handle: `@${acc.username}`,
+              niche: acc.type === 'byo' ? 'BYO Account' : 'Partner Account',
+              emoji: '📱',
+              draftCount: 0, // Will be populated from API later
+              lastPosted: 'Not yet',
+              status: acc.status === 'active' ? 'empty' : 'pending',
+              accountId: acc.id
+            }));
+        }
+      } catch (err) {
+        console.error('Error loading accounts:', err);
+        // Fallback to demo if API fails
+        accounts = [];
+      }
+      
+      // If no accounts loaded, show a message
+      if (accounts.length === 0) {
+        document.getElementById('loading').innerHTML = `
+          <div style="padding: 40px; text-align: center; color: #888;">
+            <p style="font-size: 1.1rem; margin-bottom: 10px;">🎉 Ready to connect accounts!</p>
+            <p style="font-size: 0.9rem;">Go to GenViral and connect your TikTok accounts.</p>
+          </div>
+        `;
+      }
+      
+      renderAccounts();
+      updateStats();
+    }
     
     // Function to render account cards
     function renderAccounts() {
@@ -348,6 +386,10 @@
       allContainer.innerHTML = allAccountsHTML;
       
       // Update stats
+      // Update stats with real data
+      document.getElementById('total-accounts').textContent = accounts.length;
+      
+      const totalDrafts = accounts.reduce((sum, acc) => sum + acc.draftCount, 0);
       document.getElementById('drafts-ready').textContent = totalDrafts;
     }
     
@@ -381,16 +423,7 @@
     
     // Initialize
     document.addEventListener('DOMContentLoaded', () => {
-      renderAccounts();
-      
-      // Load actual data from API
-      fetch('/api/accounts')
-        .then(r => r.json())
-        .then(data => {
-          // Update with real data when available
-          console.log('Loaded accounts:', data);
-        })
-        .catch(err => console.log('Using demo data'));
+      loadAccounts(); // Fetch real accounts from GenViral
     });
   </script>
 </body>
