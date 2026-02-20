@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Drafts - Sereno Studio</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #0a0a0a;
+      color: #fff;
+      min-height: 100vh;
+      padding-bottom: 80px;
+    }
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .back-btn {
+      background: rgba(255,255,255,0.2);
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      color: white;
+      font-size: 1.2rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .header-info h1 { font-size: 1.2rem; }
+    .header-info p { font-size: 0.8rem; opacity: 0.9; }
+    
+    .account-filter {
+      display: flex;
+      gap: 10px;
+      padding: 15px;
+      overflow-x: auto;
+      background: #1a1a1a;
+    }
+    .filter-chip {
+      background: #333;
+      border: none;
+      color: #888;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+    .filter-chip.active {
+      background: #667eea;
+      color: white;
+    }
+    
+    .draft-card {
+      background: #1a1a1a;
+      margin: 15px;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid #333;
+    }
+    .draft-header {
+      padding: 15px;
+      background: linear-gradient(135deg, #667eea20, #764ba220);
+      border-bottom: 1px solid #333;
+    }
+    .draft-account {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 5px;
+    }
+    .draft-account-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+    }
+    .draft-account-name { font-weight: 600; font-size: 0.95rem; }
+    .draft-meta {
+      font-size: 0.75rem;
+      color: #888;
+      display: flex;
+      gap: 15px;
+    }
+    
+    .slideshow-preview {
+      display: flex;
+      gap: 8px;
+      padding: 15px;
+      overflow-x: auto;
+    }
+    .slide-thumb {
+      min-width: 80px;
+      height: 120px;
+      background: #333;
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      color: #888;
+      position: relative;
+    }
+    .slide-thumb.app-insert {
+      border: 2px solid #22c55e;
+    }
+    .slide-number {
+      position: absolute;
+      top: 5px;
+      left: 5px;
+      background: rgba(0,0,0,0.7);
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
+      font-weight: 600;
+    }
+    .slide-label {
+      position: absolute;
+      bottom: 5px;
+      font-size: 0.6rem;
+      background: rgba(102, 126, 234, 0.9);
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: white;
+    }
+    
+    .caption-section {
+      padding: 15px;
+      border-top: 1px solid #333;
+    }
+    .caption-label {
+      font-size: 0.75rem;
+      color: #888;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .caption-text {
+      background: #0a0a0a;
+      padding: 15px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      margin-bottom: 10px;
+      white-space: pre-wrap;
+    }
+    .hashtags {
+      color: #667eea;
+    }
+    
+    .action-buttons {
+      display: flex;
+      gap: 10px;
+      padding: 0 15px 15px;
+    }
+    .action-btn {
+      flex: 1;
+      padding: 14px;
+      border-radius: 12px;
+      border: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .btn-copy {
+      background: #667eea;
+      color: white;
+    }
+    .btn-post {
+      background: #22c55e;
+      color: white;
+    }
+    
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #1a1a1a;
+      border-top: 1px solid #333;
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 0;
+      padding-bottom: env(safe-area-inset-bottom, 10px);
+    }
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      padding: 5px 15px;
+      color: #888;
+      font-size: 0.7rem;
+      text-decoration: none;
+    }
+    .nav-item.active { color: #667eea; }
+    .nav-icon { font-size: 1.3rem; }
+    
+    .toast {
+      position: fixed;
+      bottom: 100px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: #22c55e;
+      color: white;
+      padding: 14px 28px;
+      border-radius: 25px;
+      font-size: 0.95rem;
+      opacity: 0;
+      transition: all 0.3s;
+      z-index: 500;
+    }
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <button class="back-btn" onclick="history.back()">←</button>
+    <div class="header-info">
+      <h1>Drafts Ready</h1>
+      <p>Tap any draft to view & copy</p>
+    </div>
+  </div>
+  
+  <div id="drafts-container"></div>
+  
+  <div class="bottom-nav">
+    <a href="index.html" class="nav-item">
+      <span class="nav-icon">🏠</span>
+      <span>Home</span>
+    </a>
+    <a href="drafts.html" class="nav-item active">
+      <span class="nav-icon">📝</span>
+      <span>Drafts</span>
+    </a>
+    <a href="trends.html" class="nav-item">
+      <span class="nav-icon">📊</span>
+      <span>Trends</span>
+    </a>
+  </div>
+  
+  <div class="toast" id="toast"></div>
+  
+  <script>
+    const demoDrafts = [
+      {
+        id: '1',
+        account: '@fitgirltips',
+        emoji: '🍑',
+        niche: 'Female Fitness',
+        created: '2h ago',
+        caption: `POV: You finally found a macro tracker that actually works 🙌
+
+This app scanned my dinner and broke down every macro WITHOUT me typing a single thing... I've tracked over 100 meals now and it's always accurate.
+
+Wait until you try it for yourself 😳
+
+Comment PROTEIN below 💪 and I'll send you my high-protein meal list!`,
+        hashtags: '#fitness #gymtok #glutes #wellness #fyp',
+        slides: 6
+      },
+      {
+        id: '2',
+        account: '@gymbrotips',
+        emoji: '🏋️',
+        niche: 'Male Fitness',
+        created: '3h ago',
+        caption: `My trainer said I'd never hit my protein goals without meal prep 😤
+
+So I tried this app that scans everything you eat...
+
+Wait... it actually calculated my macros in 2 seconds??
+
+I've been using it for 3 months now and I'm finally seeing gains 💪
+
+Save this post if you want the app link!`,
+        hashtags: '#fitness #gymtok #protein #wellness #fyp',
+        slides: 6
+      },
+      {
+        id: '3',
+        account: '@calmminddaily',
+        emoji: '🧠',
+        niche: 'Mental Health',
+        created: '5h ago',
+        caption: `POV: You finally found a way to track your mental wellness 🧘
+
+This app reminded me to breathe when I was spiraling...
+
+I didn't even realize I was holding my breath 😮‍💨
+
+Now I check in every day and my anxiety has never been better
+
+Reply CAL

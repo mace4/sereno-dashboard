@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Trends - Sereno Studio</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #0a0a0a;
+      color: #fff;
+      min-height: 100vh;
+      padding-bottom: 80px;
+    }
+    .header {
+      background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+      padding: 20px;
+      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header h1 { font-size: 1.3rem; }
+    .header p { font-size: 0.8rem; opacity: 0.9; margin-top: 4px; }
+    
+    .search-box {
+      padding: 15px;
+      background: #1a1a1a;
+      border-bottom: 1px solid #333;
+    }
+    .search-input {
+      width: 100%;
+      background: #333;
+      border: 1px solid #444;
+      color: white;
+      padding: 12px 16px;
+      border-radius: 25px;
+      font-size: 0.95rem;
+    }
+    .search-input::placeholder { color: #888; }
+    
+    .trend-card {
+      background: #1a1a1a;
+      margin: 15px;
+      border-radius: 16px;
+      padding: 15px;
+      border: 1px solid #333;
+    }
+    .trend-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .trend-title {
+      font-weight: 600;
+      font-size: 1rem;
+    }
+    .trend-badge {
+      background: #22c55e30;
+      color: #22c55e;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+    }
+    
+    .hashtag-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 15px;
+    }
+    .hashtag {
+      background: #333;
+      color: #22c55e;
+      padding: 6px 12px;
+      border-radius: 15px;
+      font-size: 0.8rem;
+    }
+    
+    .hook-list {
+      margin-top: 12px;
+    }
+    .hook-item {
+      background: #0a0a0a;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      font-size: 0.9rem;
+      border-left: 3px solid #22c55e;
+    }
+    
+    .stats-row {
+      display: flex;
+      gap: 15px;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid #333;
+    }
+    .stat-item {
+      text-align: center;
+      flex: 1;
+    }
+    .stat-value {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #22c55e;
+    }
+    .stat-label {
+      font-size: 0.7rem;
+      color: #888;
+      margin-top: 2px;
+    }
+    
+    .generate-btn {
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      color: white;
+      border: none;
+      padding: 14px;
+      border-radius: 12px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      width: 100%;
+      margin-top: 12px;
+      cursor: pointer;
+    }
+    
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #1a1a1a;
+      border-top: 1px solid #333;
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 0;
+      padding-bottom: env(safe-area-inset-bottom, 10px);
+    }
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      padding: 5px 15px;
+      color: #888;
+      font-size: 0.7rem;
+      text-decoration: none;
+    }
+    .nav-item.active { color: #22c55e; }
+    .nav-icon { font-size: 1.3rem; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>📈 Trend Research</h1>
+    <p>Find viral content ideas</p>
+  </div>
+  
+  <div class="search-box">
+    <input type="text" class="search-input" placeholder="Search: protein, glutes, anxiety..." id="searchInput">
+  </div>
+  
+  <div id="trends-container">
+    <div class="trend-card">
+      <div class="trend-header">
+        <span class="trend-title">🔥 protein tracking</span>
+        <span class="trend-badge">TRENDING</span>
+      </div>
+      <div class="hashtag-list">
+        <span class="hashtag">#protein</span>
+        <span class="hashtag">#macros</span>
+        <span class="hashtag">#gymtok</span>
+        <span class="hashtag">#fitness</span>
+        <span class="hashtag">#fyp</span>
+      </div>
+      <div class="stats-row">
+        <div class="stat-item">
+          <div class="stat-value">2.4M</div>
+          <div class="stat-label">views</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value">847</div>
+          <div class="stat-label">videos</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value">+340%</div>
+          <div class="stat-label">7d growth</div>
+        </div>
+      </div>
+      <div class="hook-list">
+        <div class="hook-item">"This is the ONLY protein hack you need..."</div>
+        <div class="hook-item">"My trainer didn't want me sharing this..."</div>
+        <div class="hook-item">"3 mistakes killing your gains..."</div>
+      </div>
+      <button class="generate-btn" onclick="generateFromTrend('protein')">🎬 Generate Slideshow</button>
+    </div>
+    
+    <div class="trend-card">
+      <div class="trend-header">
+        <span class="trend-title">🍑 glute workouts</span>
+        <span class="trend-badge">RISING</span>
+      </div>
+      <div class="hashtag-list">
+        <span class="hashtag">#glutes</span>
+        <span class="hashtag">#legday</span>
+        <span class="hashtag">#girlswholift</span>
+        <span class="hashtag">#fitness</span>
+        <span class="hashtag">#fyp</span>
+      </div>
+      <div class="stats-row">
+        <div class="stat-item">
+          <div class="stat-value">1.8M</div>
+          <div class="stat-label">views</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value">623</div>
+          <div class="stat-label">videos</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value">+180%</div>
+          <div class="stat-label">7d growth</div>
+        </div>
+      </div>
+      <button class="generate-btn" onclick="generateFromTrend('glutes')">🎬 Generate Slideshow</button>
+    </div>
+  </div>
+  
+  <div class="bottom-nav">
+    <a href="index.html" class="nav-item">
+      <span class="nav-icon">🏠</span>
+      <span>Home</span>
+    </a>
+    <a href="drafts.html" class="nav-item">
+      <span class="nav-icon">📝</span>
+      <span>Drafts</span>
+    </a>
+    <a href="trends.html" class="nav-item active">
+      <span class="nav-icon">📊</span>
+      <span>Trends</span>
+    </a>
+  </div>
+  
+  <script>
+    function generateFromTrend(keyword) {
+      alert(`🎬 Generating slideshow for: ${keyword}\n\nThis will:\n1. Research trends for "${keyword}"\n2. Create 6-slide slideshow\n3. Add to your drafts`);
+    }
+    
+    document.getElementById('searchInput').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        const term = this.value;
+        alert(`🔍 Searching trends for: ${term}\n\nConnecting to GenViral API...`);
+      }
+    });
+  </script>
+</body>
+</html>
